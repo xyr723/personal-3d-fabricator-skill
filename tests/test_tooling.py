@@ -4,7 +4,7 @@ import ctypes
 import errno
 import json
 import os
-from pathlib import Path
+from pathlib import Path, PurePosixPath, PureWindowsPath
 import subprocess
 import sys
 from threading import Barrier
@@ -519,6 +519,28 @@ def test_concurrent_step_exports_publish_one_complete_model(tmp_path, fake_step_
     assert set(tmp_path.iterdir()) == {output}
 
 
+def _normalized_link_target(path):
+    if isinstance(path, PureWindowsPath):
+        name = path.as_posix()
+        if name.startswith("//?/"):
+            name = name[4:]
+            if name[:4].lower() == "unc/":
+                name = "//" + name[4:]
+            return PureWindowsPath(name)
+    return path
+
+
+@pytest.mark.parametrize(("recorded", "expected", "same"), [
+    (PureWindowsPath(r"\\?\C:\Temp\Missing"), PureWindowsPath("c:/temp/missing"), True),
+    (PureWindowsPath("//?/UNC/Host/Share/Missing"), PureWindowsPath("//host/share/missing"), True),
+    (PureWindowsPath("//?/C:/temp/other"), PureWindowsPath("C:/temp/missing"), False),
+    (PureWindowsPath("//?/D:/temp/missing"), PureWindowsPath("C:/temp/missing"), False),
+    (PurePosixPath("/tmp/Missing"), PurePosixPath("/tmp/missing"), False),
+])
+def test_link_targets_follow_platform_path_semantics(recorded, expected, same):
+    assert (_normalized_link_target(recorded) == _normalized_link_target(expected)) is same
+
+
 def test_step_publish_preserves_dangling_symlink_created_during_export(tmp_path, fake_step_export):
     output = tmp_path / "model.stp"
     missing = tmp_path / "missing"
@@ -537,7 +559,7 @@ def test_step_publish_preserves_dangling_symlink_created_during_export(tmp_path,
     with pytest.raises(FileExistsError):
         export_step(object(), output)
 
-    assert output.readlink() == missing
+    assert _normalized_link_target(output.readlink()) == _normalized_link_target(missing)
     assert not missing.exists()
     assert set(tmp_path.iterdir()) == {output}
 
