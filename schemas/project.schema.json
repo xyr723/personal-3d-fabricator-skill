@@ -1,0 +1,576 @@
+{
+  "$defs": {
+    "ApprovalState": {
+      "enum": [
+        "draft",
+        "overall_approved",
+        "split_approved"
+      ],
+      "title": "ApprovalState",
+      "type": "string"
+    },
+    "ApprovedMesh": {
+      "additionalProperties": false,
+      "description": "Identity and dimensions of the archived input reviewed for overall approval.",
+      "properties": {
+        "archive_version": {
+          "minLength": 1,
+          "title": "Archive Version",
+          "type": "string"
+        },
+        "assumed_unit": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Assumed Unit"
+        },
+        "filename": {
+          "minLength": 1,
+          "title": "Filename",
+          "type": "string"
+        },
+        "inspection": {
+          "$ref": "#/$defs/InspectionReport"
+        },
+        "sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        }
+      },
+      "required": [
+        "archive_version",
+        "filename",
+        "sha256",
+        "inspection"
+      ],
+      "title": "ApprovedMesh",
+      "type": "object"
+    },
+    "ArchivedArtifact": {
+      "additionalProperties": false,
+      "description": "A version committed after verifying the published file and checksum.",
+      "properties": {
+        "archive_version": {
+          "minLength": 1,
+          "title": "Archive Version",
+          "type": "string"
+        },
+        "committed_at": {
+          "format": "date-time",
+          "title": "Committed At",
+          "type": "string"
+        },
+        "filename": {
+          "minLength": 1,
+          "title": "Filename",
+          "type": "string"
+        },
+        "role": {
+          "minLength": 1,
+          "title": "Role",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        },
+        "size_bytes": {
+          "minimum": 0,
+          "title": "Size Bytes",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "archive_version",
+        "filename",
+        "role",
+        "sha256",
+        "size_bytes",
+        "committed_at"
+      ],
+      "title": "ArchivedArtifact",
+      "type": "object"
+    },
+    "InspectionIssue": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "minLength": 1,
+          "title": "Code",
+          "type": "string"
+        },
+        "message": {
+          "minLength": 1,
+          "title": "Message",
+          "type": "string"
+        },
+        "severity": {
+          "enum": [
+            "info",
+            "warning",
+            "error"
+          ],
+          "title": "Severity",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "severity",
+        "message"
+      ],
+      "title": "InspectionIssue",
+      "type": "object"
+    },
+    "InspectionReport": {
+      "additionalProperties": false,
+      "properties": {
+        "bounds_mm": {
+          "anyOf": [
+            {
+              "maxItems": 3,
+              "minItems": 3,
+              "prefixItems": [
+                {
+                  "minimum": 0,
+                  "type": "number"
+                },
+                {
+                  "minimum": 0,
+                  "type": "number"
+                },
+                {
+                  "minimum": 0,
+                  "type": "number"
+                }
+              ],
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "X, Y, Z extents when the scale is known.",
+          "title": "Bounds Mm"
+        },
+        "component_count": {
+          "minimum": 0,
+          "title": "Component Count",
+          "type": "integer"
+        },
+        "degenerate_face_count": {
+          "minimum": 0,
+          "title": "Degenerate Face Count",
+          "type": "integer"
+        },
+        "face_count": {
+          "minimum": 0,
+          "title": "Face Count",
+          "type": "integer"
+        },
+        "format": {
+          "minLength": 1,
+          "title": "Format",
+          "type": "string"
+        },
+        "issues": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/InspectionIssue"
+          },
+          "title": "Issues",
+          "type": "array"
+        },
+        "watertight": {
+          "title": "Watertight",
+          "type": "boolean"
+        },
+        "winding_consistent": {
+          "title": "Winding Consistent",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "format",
+        "bounds_mm",
+        "watertight",
+        "winding_consistent",
+        "component_count",
+        "face_count",
+        "degenerate_face_count"
+      ],
+      "title": "InspectionReport",
+      "type": "object"
+    },
+    "OverallPreview": {
+      "additionalProperties": false,
+      "description": "Draft source and hashes of the views prepared for overall approval.",
+      "properties": {
+        "mesh": {
+          "$ref": "#/$defs/ApprovedMesh"
+        },
+        "scale_reference_mm": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Project scale reference in millimeters at review time.",
+          "title": "Scale Reference Mm"
+        },
+        "views_sha256": {
+          "items": {
+            "pattern": "^[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Views Sha256",
+          "type": "array"
+        }
+      },
+      "required": [
+        "mesh",
+        "views_sha256"
+      ],
+      "title": "OverallPreview",
+      "type": "object"
+    },
+    "PinSocketSpec": {
+      "properties": {
+        "clearance_mm": {
+          "minimum": 0,
+          "title": "Clearance Mm",
+          "type": "number"
+        },
+        "count": {
+          "exclusiveMinimum": 0,
+          "title": "Count",
+          "type": "integer"
+        },
+        "pin_diameter_mm": {
+          "exclusiveMinimum": 0,
+          "title": "Pin Diameter Mm",
+          "type": "number"
+        },
+        "pin_length_mm": {
+          "exclusiveMinimum": 0,
+          "title": "Pin Length Mm",
+          "type": "number"
+        }
+      },
+      "required": [
+        "pin_diameter_mm",
+        "pin_length_mm",
+        "clearance_mm",
+        "count"
+      ],
+      "title": "PinSocketSpec",
+      "type": "object"
+    },
+    "PrinterProfile": {
+      "additionalProperties": false,
+      "properties": {
+        "build_volume_mm": {
+          "description": "Usable X, Y, Z envelope in millimeters.",
+          "maxItems": 3,
+          "minItems": 3,
+          "prefixItems": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            }
+          ],
+          "title": "Build Volume Mm",
+          "type": "array"
+        },
+        "enclosed": {
+          "title": "Enclosed",
+          "type": "boolean"
+        },
+        "heated_chamber": {
+          "title": "Heated Chamber",
+          "type": "boolean"
+        },
+        "is_template": {
+          "default": false,
+          "title": "Is Template",
+          "type": "boolean"
+        },
+        "nozzle_diameters_mm": {
+          "description": "Supported nozzle diameter options in millimeters.",
+          "items": {
+            "exclusiveMinimum": 0,
+            "type": "number"
+          },
+          "minItems": 1,
+          "title": "Nozzle Diameters Mm",
+          "type": "array"
+        },
+        "slicer": {
+          "minLength": 1,
+          "title": "Slicer",
+          "type": "string"
+        },
+        "source_url": {
+          "anyOf": [
+            {
+              "format": "uri",
+              "maxLength": 2083,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Url"
+        },
+        "supported_materials": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Supported Materials",
+          "type": "array"
+        },
+        "toolhead_count": {
+          "minimum": 1,
+          "title": "Toolhead Count",
+          "type": "integer"
+        },
+        "verified_on": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Verified On"
+        }
+      },
+      "required": [
+        "build_volume_mm",
+        "toolhead_count",
+        "nozzle_diameters_mm",
+        "enclosed",
+        "heated_chamber",
+        "supported_materials",
+        "slicer"
+      ],
+      "title": "PrinterProfile",
+      "type": "object"
+    },
+    "SplitConnector": {
+      "additionalProperties": false,
+      "properties": {
+        "mode": {
+          "enum": [
+            "flat",
+            "pin"
+          ],
+          "title": "Mode",
+          "type": "string"
+        },
+        "pin": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PinSocketSpec"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "mode"
+      ],
+      "title": "SplitConnector",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "approval_state": {
+      "$ref": "#/$defs/ApprovalState",
+      "default": "draft"
+    },
+    "approved_mesh": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ApprovedMesh"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "approved_split_sha256": {
+      "anyOf": [
+        {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Approved Split Sha256"
+    },
+    "artifacts": {
+      "anyOf": [
+        {
+          "items": {
+            "$ref": "#/$defs/ArchivedArtifact"
+          },
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Artifacts"
+    },
+    "artifacts_sha256": {
+      "anyOf": [
+        {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Artifacts Sha256"
+    },
+    "material": {
+      "anyOf": [
+        {
+          "minLength": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Material"
+    },
+    "name": {
+      "minLength": 1,
+      "title": "Name",
+      "type": "string"
+    },
+    "overall_preview": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/OverallPreview"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "printer_profile": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/PrinterProfile"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "requirements": {
+      "default": [],
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "title": "Requirements",
+      "type": "array"
+    },
+    "scale_reference_mm": {
+      "anyOf": [
+        {
+          "exclusiveMinimum": 0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Scale Reference Mm"
+    },
+    "split_connector": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/SplitConnector"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "split_preview_sha256": {
+      "anyOf": [
+        {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Split Preview Sha256"
+    },
+    "units": {
+      "const": "mm",
+      "default": "mm",
+      "title": "Units",
+      "type": "string"
+    }
+  },
+  "required": [
+    "name"
+  ],
+  "title": "ProjectManifest",
+  "type": "object"
+}

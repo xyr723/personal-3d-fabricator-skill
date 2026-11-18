@@ -1,0 +1,12 @@
+{
+  "build_volume_mm": [235.5, 256, 256],
+  "toolhead_count": 2,
+  "nozzle_diameters_mm": [0.2, 0.4, 0.6, 0.8],
+  "enclosed": true,
+  "heated_chamber": true,
+  "supported_materials": ["PLA", "PETG", "ABS", "ASA", "PET", "PA", "PC", "PVA"],
+  "slicer": "bambu-studio",
+  "is_template": false,
+  "source_url": "https://store.bblcdn.com/s3/default/c36bd23b20bc493a90e3b5e27c32a9a4/X2D_spec.pdf",
+  "verified_on": "2026-11-18"
+}

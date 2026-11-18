@@ -1,0 +1,113 @@
+{
+  "$defs": {
+    "InspectionIssue": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "minLength": 1,
+          "title": "Code",
+          "type": "string"
+        },
+        "message": {
+          "minLength": 1,
+          "title": "Message",
+          "type": "string"
+        },
+        "severity": {
+          "enum": [
+            "info",
+            "warning",
+            "error"
+          ],
+          "title": "Severity",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "severity",
+        "message"
+      ],
+      "title": "InspectionIssue",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "bounds_mm": {
+      "anyOf": [
+        {
+          "maxItems": 3,
+          "minItems": 3,
+          "prefixItems": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "minimum": 0,
+              "type": "number"
+            }
+          ],
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "X, Y, Z extents when the scale is known.",
+      "title": "Bounds Mm"
+    },
+    "component_count": {
+      "minimum": 0,
+      "title": "Component Count",
+      "type": "integer"
+    },
+    "degenerate_face_count": {
+      "minimum": 0,
+      "title": "Degenerate Face Count",
+      "type": "integer"
+    },
+    "face_count": {
+      "minimum": 0,
+      "title": "Face Count",
+      "type": "integer"
+    },
+    "format": {
+      "minLength": 1,
+      "title": "Format",
+      "type": "string"
+    },
+    "issues": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/InspectionIssue"
+      },
+      "title": "Issues",
+      "type": "array"
+    },
+    "watertight": {
+      "title": "Watertight",
+      "type": "boolean"
+    },
+    "winding_consistent": {
+      "title": "Winding Consistent",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "format",
+    "bounds_mm",
+    "watertight",
+    "winding_consistent",
+    "component_count",
+    "face_count",
+    "degenerate_face_count"
+  ],
+  "title": "InspectionReport",
+  "type": "object"
+}

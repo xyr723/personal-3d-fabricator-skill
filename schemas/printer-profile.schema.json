@@ -1,0 +1,106 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "build_volume_mm": {
+      "description": "Usable X, Y, Z envelope in millimeters.",
+      "maxItems": 3,
+      "minItems": 3,
+      "prefixItems": [
+        {
+          "exclusiveMinimum": 0,
+          "type": "number"
+        },
+        {
+          "exclusiveMinimum": 0,
+          "type": "number"
+        },
+        {
+          "exclusiveMinimum": 0,
+          "type": "number"
+        }
+      ],
+      "title": "Build Volume Mm",
+      "type": "array"
+    },
+    "enclosed": {
+      "title": "Enclosed",
+      "type": "boolean"
+    },
+    "heated_chamber": {
+      "title": "Heated Chamber",
+      "type": "boolean"
+    },
+    "is_template": {
+      "default": false,
+      "title": "Is Template",
+      "type": "boolean"
+    },
+    "nozzle_diameters_mm": {
+      "description": "Supported nozzle diameter options in millimeters.",
+      "items": {
+        "exclusiveMinimum": 0,
+        "type": "number"
+      },
+      "minItems": 1,
+      "title": "Nozzle Diameters Mm",
+      "type": "array"
+    },
+    "slicer": {
+      "minLength": 1,
+      "title": "Slicer",
+      "type": "string"
+    },
+    "source_url": {
+      "anyOf": [
+        {
+          "format": "uri",
+          "maxLength": 2083,
+          "minLength": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Source Url"
+    },
+    "supported_materials": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "title": "Supported Materials",
+      "type": "array"
+    },
+    "toolhead_count": {
+      "minimum": 1,
+      "title": "Toolhead Count",
+      "type": "integer"
+    },
+    "verified_on": {
+      "anyOf": [
+        {
+          "format": "date",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Verified On"
+    }
+  },
+  "required": [
+    "build_volume_mm",
+    "toolhead_count",
+    "nozzle_diameters_mm",
+    "enclosed",
+    "heated_chamber",
+    "supported_materials",
+    "slicer"
+  ],
+  "title": "PrinterProfile",
+  "type": "object"
+}

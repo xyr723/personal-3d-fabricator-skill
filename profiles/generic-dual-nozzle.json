@@ -1,0 +1,12 @@
+{
+  "build_volume_mm": [220, 220, 250],
+  "toolhead_count": 2,
+  "nozzle_diameters_mm": [0.4],
+  "enclosed": false,
+  "heated_chamber": false,
+  "supported_materials": ["PLA", "PETG"],
+  "slicer": "generic",
+  "is_template": true,
+  "source_url": null,
+  "verified_on": null
+}

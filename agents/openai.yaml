@@ -1,0 +1,4 @@
+interface:
+  display_name: "Personal 3D Fabricator"
+  short_description: "Create, modify, and split 3D-printable models"
+  default_prompt: "使用 $personal-3d-fabricator 根据我的尺寸创建一个可打印的模型。"

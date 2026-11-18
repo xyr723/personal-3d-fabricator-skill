@@ -1,0 +1,277 @@
+{
+  "$defs": {
+    "ApprovalState": {
+      "enum": [
+        "draft",
+        "overall_approved",
+        "split_approved"
+      ],
+      "title": "ApprovalState",
+      "type": "string"
+    },
+    "InspectionIssue": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "minLength": 1,
+          "title": "Code",
+          "type": "string"
+        },
+        "message": {
+          "minLength": 1,
+          "title": "Message",
+          "type": "string"
+        },
+        "severity": {
+          "enum": [
+            "info",
+            "warning",
+            "error"
+          ],
+          "title": "Severity",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "severity",
+        "message"
+      ],
+      "title": "InspectionIssue",
+      "type": "object"
+    },
+    "InspectionReport": {
+      "additionalProperties": false,
+      "properties": {
+        "bounds_mm": {
+          "anyOf": [
+            {
+              "maxItems": 3,
+              "minItems": 3,
+              "prefixItems": [
+                {
+                  "minimum": 0,
+                  "type": "number"
+                },
+                {
+                  "minimum": 0,
+                  "type": "number"
+                },
+                {
+                  "minimum": 0,
+                  "type": "number"
+                }
+              ],
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "X, Y, Z extents when the scale is known.",
+          "title": "Bounds Mm"
+        },
+        "component_count": {
+          "minimum": 0,
+          "title": "Component Count",
+          "type": "integer"
+        },
+        "degenerate_face_count": {
+          "minimum": 0,
+          "title": "Degenerate Face Count",
+          "type": "integer"
+        },
+        "face_count": {
+          "minimum": 0,
+          "title": "Face Count",
+          "type": "integer"
+        },
+        "format": {
+          "minLength": 1,
+          "title": "Format",
+          "type": "string"
+        },
+        "issues": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/InspectionIssue"
+          },
+          "title": "Issues",
+          "type": "array"
+        },
+        "watertight": {
+          "title": "Watertight",
+          "type": "boolean"
+        },
+        "winding_consistent": {
+          "title": "Winding Consistent",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "format",
+        "bounds_mm",
+        "watertight",
+        "winding_consistent",
+        "component_count",
+        "face_count",
+        "degenerate_face_count"
+      ],
+      "title": "InspectionReport",
+      "type": "object"
+    },
+    "PrintPart": {
+      "additionalProperties": false,
+      "properties": {
+        "bounds_mm": {
+          "anyOf": [
+            {
+              "maxItems": 3,
+              "minItems": 3,
+              "prefixItems": [
+                {
+                  "minimum": 0,
+                  "type": "number"
+                },
+                {
+                  "minimum": 0,
+                  "type": "number"
+                },
+                {
+                  "minimum": 0,
+                  "type": "number"
+                }
+              ],
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Bounds Mm"
+        },
+        "orientation_deg": {
+          "anyOf": [
+            {
+              "maxItems": 3,
+              "minItems": 3,
+              "prefixItems": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Orientation Deg"
+        },
+        "part_id": {
+          "minLength": 1,
+          "title": "Part Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "part_id"
+      ],
+      "title": "PrintPart",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "approval_state": {
+      "$ref": "#/$defs/ApprovalState",
+      "default": "draft"
+    },
+    "assembly_order": {
+      "default": [],
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "title": "Assembly Order",
+      "type": "array"
+    },
+    "connectors": {
+      "default": [],
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "title": "Connectors",
+      "type": "array"
+    },
+    "hardware": {
+      "default": [],
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "title": "Hardware",
+      "type": "array"
+    },
+    "inspection": {
+      "$ref": "#/$defs/InspectionReport"
+    },
+    "material": {
+      "anyOf": [
+        {
+          "minLength": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Material"
+    },
+    "parts": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/PrintPart"
+      },
+      "title": "Parts",
+      "type": "array"
+    },
+    "plates": {
+      "default": [],
+      "description": "Estimated plate groups, each containing part IDs.",
+      "items": {
+        "items": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "title": "Plates",
+      "type": "array"
+    },
+    "risks": {
+      "default": [],
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "title": "Risks",
+      "type": "array"
+    }
+  },
+  "required": [
+    "inspection"
+  ],
+  "title": "PrintPlan",
+  "type": "object"
+}

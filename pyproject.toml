@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "personal-3d-fabricator"
+version = "0.1.0"
+description = "Workflows for designing and preparing personal 3D-printable models"
+requires-python = ">=3.11"
+dependencies = [
+    "pydantic>=2,<3",
+    "trimesh>=4.12.2,<5",
+    "numpy>=2,<3",
+    "lxml>=5,<7",
+    "networkx>=3,<4",
+    "scipy>=1.11,<2",
+    "shapely>=2.2,<3",
+    "rtree>=1,<2",
+    "python-fcl>=0.7.0.11,<0.8",
+    "Pillow>=11,<13",
+    "matplotlib>=3.10,<4",
+    "fonttools>=4.55,<5",
+]
+
+[project.scripts]
+personal-3d-fabricator = "personal_3d_fabricator.cli:main"
+
+[project.optional-dependencies]
+cadquery = ["cadquery>=2.4,<3"]
+dev = [
+    "pytest>=8,<10",
+    "PyYAML>=6,<7",
+    "markdown-it-py>=3,<5",
+    "jsonschema>=4.18,<5",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
